@@ -1,0 +1,31 @@
+<h1>Portfolio</h1>
+<a routerLink="add" class="btn btn-sm btn-success mb-2">Add Stock</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 30%">Sl.No</th>
+            <th style="width: 30%">Stock Name</th>
+            <th style="width: 30%">Quantity</th>
+            <th style="width: 10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let stock of stocks">
+            <td>{{stock.id}}</td>
+            <td>{{stock.stockName}}</td>
+            <td>{{stock.quantity}}</td>
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{stock.id}}" class="btn btn-sm btn-primary me-1">Edit</a>
+                <button (click)="deleteStock(stock.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="stock.isDeleting">
+                    <span *ngIf="stock.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!stock.isDeleting">Delete</span>
+                </button>
+            </td>
+        </tr>
+        <tr *ngIf="!stocks">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
