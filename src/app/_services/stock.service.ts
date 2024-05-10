@@ -20,7 +20,7 @@ export class StockService {
         this.stock = this.stockSubject.asObservable();
     }
 
-    public get userValue() {
+    public get stockValue() {
         return this.stockSubject.value;
     }
 
@@ -60,7 +60,7 @@ export class StockService {
                 if (id == this.stockValue?.id) {
                     // update local storage
                     const stock = { ...this.stockValue, ...params };
-                    localStorage.setItem('user', JSON.stringify(stock));
+                    localStorage.setItem('stock', JSON.stringify(stock));
 
                     // publish updated user to subscribers
                     this.stockSubject.next(stock);
@@ -70,11 +70,11 @@ export class StockService {
     }
 
     delete(id: string) {
-        return this.http.delete(`${environment.apiUrl}/users/${id}`)
+        return this.http.delete(`${environment.apiUrl}/stocks/${id}`)
             .pipe(map(x => {
                 // auto logout if the logged in user deleted their own record
-                if (id == this.userValue?.id) {
-                    this.logout();
+                if (id == this.stockValue?.id) {
+                    this.getAll();
                 }
                 return x;
             }));

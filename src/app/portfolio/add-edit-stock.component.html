@@ -1,0 +1,49 @@
+<h1>{{title}}</h1>
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="mb-3 col">
+            <label class="form-label">Stock Name</label>
+            <input type="text" formControlName="stockName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.stockName.errors }" />
+            <div *ngIf="submitted && f.stockName.errors" class="invalid-feedback">
+                <div *ngIf="f.stockName.errors.required">Stock Name is required</div>
+            </div>
+        </div>
+        <div class="mb-3 col">
+            <label class="form-label">Price</label>
+            <input type="number" formControlName="price" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.price.errors }" />
+            <div *ngIf="submitted && f.price.errors" class="invalid-feedback">
+                <div *ngIf="f.price.errors.required">Price is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3 col">
+            <label class="form-label">Quantity</label>
+            <input type="number" formControlName="quantity" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.quantity.errors }" />
+            <div *ngIf="submitted && f.quantity.errors" class="invalid-feedback">
+                <div *ngIf="f.quantity.errors.required">Quantity is required</div>
+            </div>
+        </div>
+        <div class="mb-3 col">
+            <label class="form-label">
+                Total
+                <em *ngIf="id">(Leave blank to keep the same password)</em>
+            </label>
+            <input type="number" formControlName="total" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.total.errors }" />
+            <div *ngIf="submitted && f.total.errors" class="invalid-feedback">
+                <div *ngIf="f.total.errors.required">Total is required</div>
+                <div *ngIf="f.total.errors.minlength">Total must be at least 6 characters</div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <button [disabled]="submitting" class="btn btn-primary">
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+            Buy
+        </button>
+        <a routerLink="/stocks" class="btn btn-link">Cancel</a>
+    </div>
+</form>
+<div *ngIf="loading" class="text-center m-5">
+    <span class="spinner-border spinner-border-lg align-center"></span>
+</div>

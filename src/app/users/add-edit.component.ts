@@ -5,8 +5,8 @@ import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/_services';
 
-@Component({ templateUrl: 'add-edit.component.html' })
-export class AddEditComponent implements OnInit {
+@Component({ templateUrl: 'add-edit-stock.component.html' })
+export class AddEditStockComponent implements OnInit {
     form!: FormGroup;
     id?: string;
     title!: string;
