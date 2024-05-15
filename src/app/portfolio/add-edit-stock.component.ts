@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'app-add-edit-stock',
-  templateUrl: './add-edit-stock.component.html',
-  styleUrls: ['./add-edit-stock.component.less']
-})
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertService } from '@app/_services';
+import { StockService } from '@app/_services/stock.service';
+import { first } from 'rxjs';
+@Component({ templateUrl: '.\portfolio\add-edit-stock.component.html' })
 export class AddEditStockComponent implements OnInit {
 
-  title: string = "Add Stocks";
-
-  form!: FormGroup;
+   form!: FormGroup;
     id?: string;
     title!: string;
     loading = false;
@@ -20,7 +18,7 @@ export class AddEditStockComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private accountService: AccountService,
+        private stockService: StockService,
         private alertService: AlertService
     ) { }
 
@@ -31,17 +29,17 @@ export class AddEditStockComponent implements OnInit {
         this.form = this.formBuilder.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
-            username: ['', Validators.required],
+            Stockname: ['', Validators.required],
             // password only required in add mode
             password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]]
         });
 
-        this.title = 'Add User';
+        this.title = 'Add Stock';
         if (this.id) {
             // edit mode
-            this.title = 'Edit User';
+            this.title = 'Edit Stock';
             this.loading = true;
-            this.accountService.getById(this.id)
+            this.stockService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => {
                     this.form.patchValue(x);
@@ -65,12 +63,12 @@ export class AddEditStockComponent implements OnInit {
         }
 
         this.submitting = true;
-        this.saveUser()
+        this.saveStock()
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success('User saved', { keepAfterRouteChange: true });
-                    this.router.navigateByUrl('/users');
+                    this.alertService.success('Stock saved', { keepAfterRouteChange: true });
+                    this.router.navigateByUrl('/stocks');
                 },
                 error: error => {
                     this.alertService.error(error);
@@ -79,11 +77,11 @@ export class AddEditStockComponent implements OnInit {
             })
     }
 
-    private saveUser() {
-        // create or update user based on id param
+    private saveStock() {
+        // create or update Stock based on id param
         return this.id
-            ? this.accountService.update(this.id!, this.form.value)
-            : this.accountService.register(this.form.value);
+            ? this.stockService.update(this.id!, this.form.value)
+            : this.stockService.buyStock(this.form.value);
     }
 
 }

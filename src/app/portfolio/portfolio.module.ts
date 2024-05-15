@@ -4,6 +4,7 @@ import { AddEditStockComponent } from './add-edit-stock.component';
 import { ListStockComponent } from './list-stock.component';
 import { LayoutComponent } from './layout.component';
 import { RouterModule } from '@angular/router';
+import { PortfolioRoutingModule } from './portfolio-routing.module';
 
 
 
@@ -15,7 +16,9 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    PortfolioRoutingModule
   ]
+
 })
 export class PortfolioModule { }

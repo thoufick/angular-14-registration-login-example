@@ -16,7 +16,7 @@ export class StockService {
         private router: Router,
         private http: HttpClient
     ) {
-        this.stockSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
+        this.stockSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('Stock')!));
         this.stock = this.stockSubject.asObservable();
     }
 
@@ -24,26 +24,30 @@ export class StockService {
         return this.stockSubject.value;
     }
 
-    // login(username: string, password: string) {
-    //     return this.http.post<Stock>(`${environment.apiUrl}/users/authenticate`, { username, password })
-    //         .pipe(map(user => {
-    //             // store user details and jwt token in local storage to keep user logged in between page refreshes
-    //             localStorage.setItem('user', JSON.stringify(user));
-    //             this.stockSubject.next(user);
-    //             return user;
+    // login(Stockname: string, password: string) {
+    //     return this.http.post<Stock>(`${environment.apiUrl}/Stocks/authenticate`, { Stockname, password })
+    //         .pipe(map(Stock => {
+    //             // store Stock details and jwt token in local storage to keep Stock logged in between page refreshes
+    //             localStorage.setItem('Stock', JSON.stringify(Stock));
+    //             this.stockSubject.next(Stock);
+    //             return Stock;
     //         }));
     // }
 
     // logout() {
-    //     // remove user from local storage and set current user to null
-    //     localStorage.removeItem('user');
+    //     // remove Stock from local storage and set current Stock to null
+    //     localStorage.removeItem('Stock');
     //     this.stockSubject.next(null);
     //     this.router.navigate(['/account/login']);
     // }
 
-    // register(user: User) {
-    //     return this.http.post(`${environment.apiUrl}/users/register`, user);
+    // register(Stock: Stock) {
+    //     return this.http.post(`${environment.apiUrl}/Stocks/register`, Stock);
     // }
+
+     buyStock(stock: Stock) {
+         return this.http.post(`${environment.apiUrl}/stocks/buyStock`, Stock);
+     }
 
     getAll() {
         return this.http.get<Stock[]>(`${environment.apiUrl}/stocks`);
@@ -56,13 +60,13 @@ export class StockService {
     update(id: string, params: any) {
         return this.http.put(`${environment.apiUrl}/stocks/${id}`, params)
             .pipe(map(x => {
-                // update stored user if the logged in user updated their own record
+                // update stored Stock if the logged in Stock updated their own record
                 if (id == this.stockValue?.id) {
                     // update local storage
                     const stock = { ...this.stockValue, ...params };
                     localStorage.setItem('stock', JSON.stringify(stock));
 
-                    // publish updated user to subscribers
+                    // publish updated Stock to subscribers
                     this.stockSubject.next(stock);
                 }
                 return x;
@@ -72,7 +76,7 @@ export class StockService {
     delete(id: string) {
         return this.http.delete(`${environment.apiUrl}/stocks/${id}`)
             .pipe(map(x => {
-                // auto logout if the logged in user deleted their own record
+                // auto logout if the logged in Stock deleted their own record
                 if (id == this.stockValue?.id) {
                     this.getAll();
                 }
