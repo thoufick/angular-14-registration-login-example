@@ -5,7 +5,10 @@ import { delay, materialize, dematerialize } from 'rxjs/operators';
 
 // array in local storage for registered users
 const usersKey = 'angular-14-registration-login-example-users';
+const stocksKey = 'angular-14-example-add-edit-stocks';
 let users: any[] = JSON.parse(localStorage.getItem(usersKey)!) || [];
+
+let stocks: any[] = JSON.parse(localStorage.getItem(stocksKey)!) || [];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -28,6 +31,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateUser();
                 case url.match(/\/users\/\d+$/) && method === 'DELETE':
                     return deleteUser();
+                case url.endsWith('/stocks/buyStock') && method === 'POST':
+                    return buyStock();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -59,9 +64,27 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
+        function buyStock() {
+            const stock = body
+
+            if (stocks.find(x => x.stockName === stock.stockName)) {
+                return error('Stock Name "' + stock.stockName + '" is already taken')
+            }
+
+            stock.id = stocks.length ? Math.max(...stocks.map(x => x.id)) + 1 : 1;
+            stocks.push(stock);
+            localStorage.setItem(stocksKey, JSON.stringify(stocks));
+            return ok();
+        }
+
         function getUsers() {
             if (!isLoggedIn()) return unauthorized();
             return ok(users.map(x => basicDetails(x)));
+        }
+
+        function getStocks() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(stocks.map(x => basicStockDetails(x)));
         }
 
         function getUserById() {
@@ -69,6 +92,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             const user = users.find(x => x.id === idFromUrl());
             return ok(basicDetails(user));
+        }
+
+        function getStockById() {
+            if (!isLoggedIn()) return unauthorized();
+
+            const stock = stocks.find(x => x.id === idFromUrl());
+            return ok(basicStockDetails(stock));
         }
 
         function updateUser() {
@@ -89,11 +119,37 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
+        function updateStock() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let stock = stocks.find(x => x.id === idFromUrl());
+
+            // only update password if entered
+            if (!params.password) {
+                delete params.password;
+            }
+
+            // update and save user
+            Object.assign(stock, params);
+            localStorage.setItem(stocksKey, JSON.stringify(stocks));
+
+            return ok();
+        }
+
         function deleteUser() {
             if (!isLoggedIn()) return unauthorized();
 
             users = users.filter(x => x.id !== idFromUrl());
             localStorage.setItem(usersKey, JSON.stringify(users));
+            return ok();
+        }
+
+        function deleteStock() {
+            if (!isLoggedIn()) return unauthorized();
+
+            stocks = stocks.filter(x => x.id !== idFromUrl());
+            localStorage.setItem(stocksKey, JSON.stringify(stocks));
             return ok();
         }
 
@@ -117,6 +173,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function basicDetails(user: any) {
             const { id, username, firstName, lastName } = user;
             return { id, username, firstName, lastName };
+        }
+
+        function basicStockDetails(stock: any) {
+            const { id, stockName, price, quantity } = stock;
+            return { id, stockName, price, quantity };
         }
 
         function isLoggedIn() {
