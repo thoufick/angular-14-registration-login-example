@@ -6,7 +6,8 @@
             <th style="width: 30%">Sl.No</th>
             <th style="width: 30%">Stock Name</th>
             <th style="width: 30%">Quantity</th>
-            <th style="width: 10%"></th>
+            <th style="width: 30%">Price</th>
+            <th style="width: 10%">Total</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,8 @@
             <td>{{stock.id}}</td>
             <td>{{stock.stockName}}</td>
             <td>{{stock.quantity}}</td>
+            <td>{{stock.price}}</td>
+            <td>{{stock.total}}</td>
             <td style="white-space: nowrap">
                 <a routerLink="edit/{{stock.id}}" class="btn btn-sm btn-primary me-1">Edit</a>
                 <button (click)="deleteStock(stock.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="stock.isDeleting">

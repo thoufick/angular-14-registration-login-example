@@ -16,7 +16,7 @@ export class ListStockComponent implements OnInit {
     ngOnInit() {
         this.stockService.getAll()
             .pipe(first())
-            .subscribe(users => this.stocks = this.stocks);
+            .subscribe(stocks => this.stocks = this.stocks);
     }
 
     deleteStock(id: string) {

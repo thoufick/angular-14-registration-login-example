@@ -4,7 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@app/_services';
 import { StockService } from '@app/_services/stock.service';
 import { first } from 'rxjs';
-@Component({ templateUrl: '.\portfolio\add-edit-stock.component.html' })
+@Component({ 
+    selector: 'app-add-edit.component',
+    templateUrl: './add-edit-stock.component.html',
+    styleUrls: ['./add-edit-stock.component.less']
+})
 export class AddEditStockComponent implements OnInit {
 
    form!: FormGroup;
@@ -27,11 +31,12 @@ export class AddEditStockComponent implements OnInit {
 
         // form with validation rules
         this.form = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            Stockname: ['', Validators.required],
+            stockName: ['', Validators.required],
+            quantity: ['', Validators.required],
+            price: ['', Validators.required],
+            total: ['', Validators.required]
             // password only required in add mode
-            password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]]
+            //password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]]
         });
 
         this.title = 'Add Stock';

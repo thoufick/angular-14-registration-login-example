@@ -5,6 +5,7 @@ import { ListStockComponent } from './list-stock.component';
 import { LayoutComponent } from './layout.component';
 import { RouterModule } from '@angular/router';
 import { PortfolioRoutingModule } from './portfolio-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -17,7 +18,9 @@ import { PortfolioRoutingModule } from './portfolio-routing.module';
   imports: [
     CommonModule,
     RouterModule,
-    PortfolioRoutingModule
+    PortfolioRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 
 })
