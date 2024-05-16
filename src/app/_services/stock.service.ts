@@ -46,7 +46,7 @@ export class StockService {
     // }
 
      buyStock(stock: Stock) {
-         return this.http.post(`${environment.apiUrl}/stocks/buyStock`, Stock);
+         return this.http.post(`${environment.apiUrl}/stocks/buyStock`, stock);
      }
 
     getAll() {
